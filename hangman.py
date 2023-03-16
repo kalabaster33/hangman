@@ -13,9 +13,6 @@ def main():
     player_name = input("\nEnter name: ")
     print(f"\n             Hello   {player_name}.")
     time.sleep(3)
-    # csv_file = select_dif()
-    # os.system('cls' if os.name == 'nt' else 'clear')
-
 
     while True:
         csv_file = select_dif()
@@ -29,10 +26,11 @@ def main():
         print("0. Go Back")
 #--------------------------------------------------------------------------------------------------#
         # pick categories to play and get back list of words
-        if pick_category(list_of_categories, csv_file) == 1:
+        cat_number = input("Enter a valid choice: ")
+        if cat_number == "0":
             continue
         else:
-            list_of_words, header = pick_category(list_of_categories, csv_file)
+            list_of_words, header = pick_category(cat_number, list_of_categories, csv_file)
             print(header)
 #--------------------------------------------------------------------------------------------------#
         # pick a word from the list for player at random
@@ -59,7 +57,7 @@ def select_dif():
                 return "easy.csv"
 
             if int(selection) == 2:
-                return "subjects.csv"
+                return "hard.csv"
 
             if int(selection) == 456:
                 return "small.csv"
@@ -67,7 +65,7 @@ def select_dif():
         except ValueError:
             continue
 #--------------------------------------------------------------------------------------------------#
-# define a list of categories, that is read from the subjects.csv file,
+# define a list of categories, that is read from the easy.csv or hard.csv file,
 # the list of categories can be dynamically updated acroding to the .csv file entries
 def list_category(csv_file):
     with open(csv_file, "r") as file:
@@ -89,24 +87,22 @@ def category(subject, csv_file):
         return category, subject
 #--------------------------------------------------------------------------------------------------#
 # pick a category
-def pick_category(list_of_categories, csv_file):
+def pick_category(cat_number, list_of_categories, csv_file):
     while True:
         try:
-            cat_number = input("Enter your choice: ")
-            if int(cat_number) == 0:
-                return 1
-            if cat_number.isalpha() == True:
-                raise ValueError("Enter an appropriate choice")
-            if int(cat_number) not in range(1, len(list_of_categories)+1):
-                raise ValueError("Enter an appropriate choice")
-                #cat_number = int(input("Enter your choice:"))
+       #     cat_number = input("Enter your choice: ")
             if int(cat_number) in range(1, len(list_of_categories)+1):
                 # get the list of words for the selected category
+                return category(list_of_categories[int(cat_number)-1], csv_file)
+            if cat_number.isalpha() == True:
+                raise ValueError
+            if int(cat_number) not in range(1, len(list_of_categories)+1):
+                raise ValueError
 
-                list_of_words, header = category(list_of_categories[int(cat_number)-1], csv_file)
-                return list_of_words, header
+
         except ValueError:
             continue
+
 
 #--------------------------------------------------------------------------------------------------#
 # the game algoritm
