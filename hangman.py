@@ -35,6 +35,10 @@ def main():
 #--------------------------------------------------------------------------------------------------#
         # pick a word from the list for player at random
         score = play_round(list_of_words, header)
+        scoreboard = retrieve_scores()
+        print(scoreboard)
+        highscores = input_highscore(scoreboard, player_name, score)
+        write_highscores(highscores)
         print(f"Your score was: {score}")
 
 #--------------------------------------------------------------------------------------------------#
@@ -113,7 +117,6 @@ def word_guess(word, header):
     for i in range(len(word)):
         game_word.append("_ ")
 
-#    print("Guess the word: " + "".join(game_word))
     used_letters = []
 
     while lives > 0:
@@ -172,9 +175,7 @@ def word_guess(word, header):
 def play_round(list_of_words, header):
     highscore = 0
     i = len(list_of_words)
-    while i >= 0:
-        if i == 0:
-            return "You have played all the words in the category. Select a new one or play the same again"
+    while i > 0:
         index = random.randint(0, i-1)
         word = list_of_words[index].lower().strip().replace(" ", "")
         print(word)
@@ -210,6 +211,38 @@ def play_round(list_of_words, header):
             os.system('cls' if os.name == 'nt' else 'clear')
             return highscore
 
+    print("You guessed all the words from the category. Pick new.")
+    time.sleep(3)
+    return highscore
+
+
+def retrieve_scores():
+    scoreboard = []
+    with open("score.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            name = row["name"]
+            score = row["score"]
+            scoreboard.append({"name":name, "score":score})
+
+    return scoreboard
+
+
+
+def input_highscore(scoreboard, name, score):
+
+    scoreboard.append({"name":name, "score":score})
+    return scoreboard
+
+
+def write_highscores(highscores):
+    fieldnames = ["name", "score"]
+    with open("score.csv", "w") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for row in highscores:
+            writer.writerow(row)
 
 
 

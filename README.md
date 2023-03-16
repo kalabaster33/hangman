@@ -25,8 +25,9 @@ Score tracking to keep track of the user's wins and losses.
 The game ends when the user has either won or lost.
 
 ## Requirements
+
 Python 3.x
-Libraries needed:
+Modules used:
  - csv
  - os
  - time
