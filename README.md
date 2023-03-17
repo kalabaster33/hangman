@@ -2,9 +2,9 @@
 
 ## Description
 
-Hangman is a text-based game that challenges players to guess a word by suggesting letters within a certain number of guesses. This Python project was built as the final project for Harvard's CS50p - Introduction to Computer Science with Python.
+Hangman is a text-based game that challenges players to guess a word by suggesting letters within a certain number of guesses. This Python project was built as the final project for Harvard's CS50p - Introduction to programming with Python.
 
-The goal of this project was to create a game that incorporates the skills and concepts learned throughout the course, including loops, functions, file input/output, and data structures.
+The goal of this project was to create a game that incorporates the skills and concepts learned throughout the course, including loops, functions, file input/output...
 
 ## How to play
 
@@ -27,11 +27,16 @@ The game ends when the user has either won or lost.
 ## Requirements
 
 Python 3.x
+
 Modules used:
- - csv
- - os
- - time
- - random
+
+- csv
+- random
+- os
+- time
+- sys
+- tty
+- termios
 
 ## Installation
 1. Clone the repository or download the ZIP file.
@@ -43,4 +48,4 @@ Modules used:
 This project was created as a final project for Harvard's CS50p course and is not currently accepting contributions. However, feel free to use the code for educational purposes or to suggest improvements.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is under no licensing. Anyone can use the code as they like.

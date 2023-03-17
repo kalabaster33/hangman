@@ -1,5 +1,4 @@
 # Create a hangman game...
-# Subjects: major cities, states in the world.... I will complete this list later, let me get some functionality noow
 
 import csv
 import random
