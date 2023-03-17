@@ -5,14 +5,12 @@ import csv
 import random
 import os
 import time
+import sys
+import tty
+import termios
 
 def main():
-    os.system('cls' if os.name == 'nt' else 'clear')
-    greeting_msg = "\nGreetings traveler. Say your name and play\n"
-    print(greeting_msg)
-    player_name = input("\nEnter name: ")
-    print(f"\n             Hello   {player_name}.")
-    time.sleep(3)
+    player_name = start_screen()
 
     while True:
         csv_file = select_dif()
@@ -24,22 +22,40 @@ def main():
         for i in range(len(list_of_categories)):
             print(f"{i+1}. {list_of_categories[i]}")
         print("0. Go Back")
+        print("H. Show TOP 10 best players")
 #--------------------------------------------------------------------------------------------------#
         # pick categories to play and get back list of words
         cat_number = input("Enter a valid choice: ")
         if cat_number == "0":
             continue
+        elif cat_number.lower() == "h":
+            show_highscores()
+            continue
+
         else:
             list_of_words, header = pick_category(cat_number, list_of_categories, csv_file)
             print(header)
 #--------------------------------------------------------------------------------------------------#
-        # pick a word from the list for player at random
+        # return a score after function play_round
+        # I input the list_of_words to get a random one from it to be played, and header to be written
+        # - on the screen (reminder of which category is played)
         score = play_round(list_of_words, header)
+
         scoreboard = retrieve_scores()
         print(scoreboard)
         highscores = input_highscore(scoreboard, player_name, score)
         write_highscores(highscores)
         print(f"Your score was: {score}")
+
+#--------------------------------------------------------------------------------------------------#
+def start_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    greeting_msg = "\nGreetings traveler. Say your name and play\n"
+    print(greeting_msg)
+    player_name = input("\nEnter name: ")
+    print(f"\n             Hello   {player_name}.")
+    time.sleep(3)
+    return player_name
 
 #--------------------------------------------------------------------------------------------------#
 #function for selecting difficulty
@@ -214,8 +230,9 @@ def play_round(list_of_words, header):
     print("You guessed all the words from the category. Pick new.")
     time.sleep(3)
     return highscore
-
-
+#--------------------------------------------------------------------------------------------------#
+# this function opens the file score.csv that has all previous games played and appends them to
+# an empty list which will be used in the next function, to append a new score to.
 def retrieve_scores():
     scoreboard = []
     with open("score.csv", "r") as file:
@@ -228,13 +245,16 @@ def retrieve_scores():
     return scoreboard
 
 
-
+#--------------------------------------------------------------------------------------------------#
+# this function should append the new player and his score to the populated scoreboard
+# and return the scoreboard
 def input_highscore(scoreboard, name, score):
 
     scoreboard.append({"name":name, "score":score})
     return scoreboard
 
-
+#--------------------------------------------------------------------------------------------------#
+#this function rewrites the score.csv file with the new entries
 def write_highscores(highscores):
     fieldnames = ["name", "score"]
     with open("score.csv", "w") as file:
@@ -244,13 +264,34 @@ def write_highscores(highscores):
         for row in highscores:
             writer.writerow(row)
 
+#--------------------------------------------------------------------------------------------------#
+# this function should show highscores
+# highscores should be shown sorted by key: score in descending order
+def show_highscores():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    highscores = []
+    with open("score.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            highscores.append({"name": row["name"], "score": row["score"]})
+        i = 5
+        while i > 0:
+            for player in sorted(highscores, key=lambda player: int(player['score']), reverse=True):
+                print(f"-- {player['name']} has a score of: {player['score']}")
+                i = i - 1
 
 
 
+    # set terminal into raw mode
+    old_settings = termios.tcgetattr(sys.stdin)
+    tty.setraw(sys.stdin)
 
+    print("Press any key to continue...")
+    sys.stdin.read(1) # wait for any key to be pressed
 
-
-
+    # restore terminal settings
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+    return
 
 
 
