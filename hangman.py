@@ -54,7 +54,7 @@ def start_screen():
     print(greeting_msg)
     player_name = input("\nEnter name: ")
     print(f"\n             Hello   {player_name}.")
-    time.sleep(3)
+    time.sleep(2)
     return player_name
 
 #--------------------------------------------------------------------------------------------------#
@@ -143,16 +143,16 @@ def word_guess(word, header):
         letter = input("Letter: ")
         if len(letter) > 1:
             print("Please enter only one character")
-            time.sleep(3)
+            anykey_screen()
             continue
         if letter.isalpha() == False:
             print("Please enter an aplhabetical character")
-            time.sleep(3)
+            anykey_screen()
             continue
         # check if letter is already used, i.e is it in the used_letters[]?
         if letter in used_letters:
             print(f"You have already used this letter: -- {letter.upper()} --")
-            time.sleep(3)
+            anykey_screen()
             continue
         if letter not in word:
             # append letter to used_letters[], to be able to check if it is used
@@ -222,8 +222,8 @@ def play_round(list_of_words, header):
 
         else:
             print(f"You failed to guess the word:  {word.upper()}")
-            print(f"\n  Too bad. Try again or change a category")
-            time.sleep(3)
+            print(f"\n  Too bad. Try again or change a category\n")
+            anykey_screen()
             os.system('cls' if os.name == 'nt' else 'clear')
             return highscore
 
@@ -274,15 +274,15 @@ def show_highscores():
         reader = csv.DictReader(file)
         for row in reader:
             highscores.append({"name": row["name"], "score": row["score"]})
-        i = 5
-        while i > 0:
-            for player in sorted(highscores, key=lambda player: int(player['score']), reverse=True):
-                print(f"-- {player['name']} has a score of: {player['score']}")
-                i = i - 1
 
+        for player in sorted(highscores, key=lambda player: int(player['score']), reverse=True)[:10]:
+            print(f"-- {player['name']} has a score of: {player['score']}")
 
-
-    # set terminal into raw mode
+    anykey_screen()
+#--------------------------------------------------------------------------------------------------#
+# ----- this sets terminal to await for any key stroke to continue with code-----------------------#
+def anykey_screen():
+        # set terminal into raw mode
     old_settings = termios.tcgetattr(sys.stdin)
     tty.setraw(sys.stdin)
 
@@ -292,6 +292,7 @@ def show_highscores():
     # restore terminal settings
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
     return
+#--------------------------------------------------------------------------------------------------#
 
 
 
